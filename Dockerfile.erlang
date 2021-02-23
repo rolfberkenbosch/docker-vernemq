@@ -1,7 +1,7 @@
 FROM erlang:slim
 
 RUN apt-get update && \
-    apt-get -y install bash procps openssl iproute2 curl jq && \
+    apt-get -y install bash procps openssl iproute2 curl jq wget && \
     apt-get -y install build-essential git gnupg2 libssl-dev && \
     addgroup --gid 10000 vernemq && \
     adduser --uid 10000 --system --ingroup vernemq --home /vernemq --disabled-password vernemq
@@ -19,8 +19,8 @@ WORKDIR /vernemq-src
 RUN make rpi32 || true
 WORKDIR /vernemq-src/_build/rpi32/lib/eleveldb/c_src
 RUN rm -rf snappy-1.0.4 && tar -xzf snappy-1.0.4.tar.gz
-COPY files/config.guess snappy-1.0.4/config.guess
-COPY files/config.sub snappy-1.0.4/config.sub
+RUN wget -O snappy-1.0.4/config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD'
+RUN wget -O snappy-1.0.4/config.sub 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD'
 RUN tar cfvz snappy-1.0.4.tar.gz snappy-1.0.4 && rm -rf snappy-1.0.4
 WORKDIR /vernemq-src
 
