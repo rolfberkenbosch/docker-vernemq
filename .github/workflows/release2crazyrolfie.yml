@@ -22,21 +22,21 @@ jobs:
                MAJOR="${BASH_REMATCH[1]}"
                MINOR="${BASH_REMATCH[2]}"
                PATCH="${BASH_REMATCH[3]}"
-               TAGS="${{ secrets.DOCKER_IMAGE }}:latest"
-               TAGS="${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}"
-               TAGS="${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}.${MINOR}"
-               TAGS="${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}.${MINOR}.${PATCH}"
+               TAGS="crazyrolfie/${{ secrets.DOCKER_IMAGE }}:latest"
+               TAGS="crazyrolfie/${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}"
+               TAGS="crazyrolfie/${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}.${MINOR}"
+               TAGS="crazyrolfie/${TAGS},${{ secrets.DOCKER_IMAGE }}:${MAJOR}.${MINOR}.${PATCH}"
             else
-               TAGS="${{ secrets.DOCKER_IMAGE }}:${VERSION}"
+               TAGS="crazyrolfie/${{ secrets.DOCKER_IMAGE }}:${VERSION}"
             fi
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
             VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
             if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
               VERSION=edge
             fi
-            TAGS="${{ secrets.DOCKER_IMAGE }}:${VERSION}"
+            TAGS="crazyrolfie/${{ secrets.DOCKER_IMAGE }}:${VERSION}"
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            TAGS="${{ secrets.DOCKER_IMAGE }}:pr-${{ github.event.number }}"
+            TAGS="crazyrolfie/${{ secrets.DOCKER_IMAGE }}:pr-${{ github.event.number }}"
           fi
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
